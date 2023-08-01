@@ -11,7 +11,8 @@ const config: CodegenConfig = {
       config: {
         contextType: "../context#DataSourceContext",
         mappers: {
-          Movie: "../movies#MovieModel",
+          Photo: "../models#PhotoModel",
+          isCommentMe: "../models#CommentModel",
         },
         scalars: {
           DateTime: DateTimeResolver.extensions.codegenScalarType,

@@ -2,6 +2,7 @@ import { ResolverProtected } from "../type";
 
 export const protectedResolver =
   (resolver: ResolverProtected) => (parent, args, context, info) => {
+    console.log(info);
     if (!context.loginUser) {
       return {
         code: 404,

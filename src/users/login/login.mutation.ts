@@ -4,6 +4,7 @@ import prisma from "../../script";
 import { Resolvers } from "../../__generates__/types";
 const Mutation: Resolvers = {
   Mutation: {
+    //@ts-ignore
     login: async (_, { username, password }, context) => {
       try {
         const { dataSources } = context;

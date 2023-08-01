@@ -18,13 +18,29 @@ export default gql`
     email: String!
     bio: String
     avatar: String
+    followers: [User]
+    following: [User]
     createdAt: DateTime!
     updatedAt: DateTime!
+    totalFollowing: Int!
+    totalFollowers: Int!
+    isFollowing: Boolean!
+    # isMe: IsMe!
+    isMe: Boolean!
+    photos: [Photo]
   }
-  type Upload {
-    fileName: String
-    mimeType: String
-    encoding: String
-    createReadStream: String
-  }
+  #   type Upload {
+  #     fileName: String
+  #     mimeType: String
+  #     encoding: String
+  #     createReadStream: String
+  #   }
+  #
+  #   type IsMe {
+  #     code: Int!
+  #     success: Boolean
+  #     message: String
+  #     user: User!
+  #   }
+  #
 `;

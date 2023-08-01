@@ -45,11 +45,9 @@ import { loadFiles } from "@graphql-tools/load-files";
 //   ignoreIndex: true,
 // });
 const typesArray = loadFilesSync(path.join(__dirname, "/**/*.typeDefs.ts"));
-const resoversArray = loadFilesSync(
-  path.join(__dirname, "/**/*.{mutation,queries}.ts")
-);
-const typeDefs = mergeTypeDefs(typesArray);
-const resolvers = mergeResolvers(resoversArray);
+const resoversArray = loadFilesSync(path.join(__dirname, "/**/*.resolvers.ts"));
+export const typeDefs = mergeTypeDefs(typesArray);
+export const resolvers = mergeResolvers(resoversArray);
 
-export const schema = makeExecutableSchema({ typeDefs, resolvers });
-export default schema;
+// export const schema = makeExecutableSchema({ typeDefs, resolvers });
+// export default schema;
