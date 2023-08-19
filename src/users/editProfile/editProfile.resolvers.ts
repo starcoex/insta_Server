@@ -67,6 +67,7 @@ const resolvers: Resolvers = {
       { firstname, lastname, email, password: newPassword, bio, avatar },
       { dataSources }
     ) => {
+      console.log(avatar);
       try {
         let avatarUrl = null;
         if (avatar) {
@@ -116,7 +117,6 @@ const resolvers: Resolvers = {
             // password: newPassword ? checkPassword : null,
           },
         });
-        console.log(avatarUrl);
 
         return {
           code: 200,

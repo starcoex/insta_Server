@@ -29,7 +29,6 @@ const Query: Resolvers = {
         skip: (page - 1) * 10,
         ...(page && { cursor: { id: page } }),
       });
-      console.log(user);
       // return {
       //   code: 200,
       //   success: true,

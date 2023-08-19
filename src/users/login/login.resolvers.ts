@@ -4,7 +4,6 @@ import prisma from "../../script";
 import { Resolvers } from "../../__generates__/types";
 const resolvers: Resolvers = {
   Mutation: {
-    //@ts-ignore
     login: async (_, { username, password }, context) => {
       try {
         const { dataSources } = context;
@@ -18,7 +17,7 @@ const resolvers: Resolvers = {
             code: 404,
             success: false,
             message: "User not found",
-            user: null,
+            // user: null,
           };
         }
         //check password with args.password
@@ -28,7 +27,7 @@ const resolvers: Resolvers = {
             code: 404,
             success: false,
             message: "Incorrect password",
-            user: null,
+            // user: null,
           };
         }
         return {
@@ -36,7 +35,7 @@ const resolvers: Resolvers = {
           success: true,
           message: "Login Success",
           token: token,
-          user,
+          // user,
         };
       } catch (error) {
         return {

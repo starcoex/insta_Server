@@ -28,7 +28,7 @@ const resolvers: Resolvers = {
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
-        const ok = await prisma.user.create({
+        const user = await prisma.user.create({
           data: {
             firstName: firstname,
             lastName: lastname,
@@ -41,7 +41,7 @@ const resolvers: Resolvers = {
           code: 200,
           success: true,
           message: "Create User",
-          user: ok,
+          user: user,
         };
       } catch (error) {
         return error;

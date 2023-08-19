@@ -1,11 +1,27 @@
 import { Resolvers } from "../../__generates__/types";
 import prisma from "../../script";
 
+// const resolvers: Resolvers = {
+//   Query: {
+//     seeFollowers: async (_, { username, page }) => {
+//       const followers = await prisma.user
+//         .findUnique({ where: { userName: username } })
+//         .followers({
+//           take: 5,
+//           skip: (page - 1) * 5,
+//         });
+//       return {
+//         ok: true,
+//         followers: followers,
+//       };
+//     },
+//   },
+// };
 const resolvers: Resolvers = {
   Query: {
+    //이유를 모르겠음
     //@ts-ignore
-    seeFollowers: async (parent, { username, page }) => {
-      console.log(parent);
+    seeFollowers: async (_, { username, page }) => {
       const user = await prisma.user.findUnique({
         where: {
           userName: username,
@@ -40,7 +56,7 @@ const resolvers: Resolvers = {
         code: 200,
         success: true,
         message: "Followers Success",
-        followers: followers,
+        followers: [followers],
         totalPages: Math.ceil(totalFollowers / 10),
       };
 

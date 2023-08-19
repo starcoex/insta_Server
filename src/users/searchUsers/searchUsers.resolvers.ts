@@ -4,6 +4,7 @@ import prisma from "../../script";
 
 const resolvers: Resolvers = {
   Query: {
+    //이유를 모르겠음
     //@ts-ignore
     searchUsers: async (_, { keyword, page }, { dataSources }) => {
       if (keyword.length < 1) {
@@ -29,7 +30,6 @@ const resolvers: Resolvers = {
         skip: (page - 1) * 10,
         ...(page && { cursor: { id: page } }),
       });
-      console.log(user);
       // return {
       //   code: 200,
       //   success: true,
@@ -47,7 +47,7 @@ const resolvers: Resolvers = {
         code: 200,
         success: true,
         message: "User serach Ok.",
-        user,
+        user: user,
       };
     },
   },

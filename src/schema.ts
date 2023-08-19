@@ -49,5 +49,5 @@ const resoversArray = loadFilesSync(path.join(__dirname, "/**/*.resolvers.ts"));
 export const typeDefs = mergeTypeDefs(typesArray);
 export const resolvers = mergeResolvers(resoversArray);
 
-// export const schema = makeExecutableSchema({ typeDefs, resolvers });
-// export default schema;
+export const schema = makeExecutableSchema({ typeDefs, resolvers });
+export default schema;

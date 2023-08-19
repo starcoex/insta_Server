@@ -5,12 +5,11 @@ export default gql`
     code: Int!
     success: Boolean!
     message: String!
-    user: [User]!
+    user: [User]
   }
   type Query {
+    # searchUsers(keyword: String!): [User]
+    # searchUsers(keyword: String!, page: Int): [User]
     searchUsers(keyword: String!, page: Int): SearchUsersResponse
   }
-  # type Query {
-  #   searchUsers(keyword: String!, page: Int): [User]
-  # }
 `;

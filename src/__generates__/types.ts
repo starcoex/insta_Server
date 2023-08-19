@@ -55,6 +55,13 @@ export type DeleteCommentResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+export type DeleteMessageResponse = {
+  __typename?: 'DeleteMessageResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type DeletePhotoResponse = {
   __typename?: 'DeletePhotoResponse';
   code: Scalars['Int']['output'];
@@ -130,7 +137,18 @@ export type LoginResponse = {
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
   token?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<User>;
+};
+
+export type Message = {
+  __typename?: 'Message';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  isMine: Scalars['Boolean']['output'];
+  payload: Scalars['String']['output'];
+  read: Scalars['Boolean']['output'];
+  room: Room;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
 };
 
 export type Mutation = {
@@ -138,6 +156,7 @@ export type Mutation = {
   createAccount: CreateAccountResponse;
   createComment?: Maybe<SeeFeedResponse>;
   deleteComment?: Maybe<DeleteCommentResponse>;
+  deleteMessage?: Maybe<DeleteMessageResponse>;
   deletePhoto?: Maybe<DeletePhotoResponse>;
   deleteUser?: Maybe<User>;
   editComment?: Maybe<EditCommentResponse>;
@@ -145,7 +164,9 @@ export type Mutation = {
   editProfileUser?: Maybe<EditProfileResponse>;
   followUser?: Maybe<FollowUserResponse>;
   likePhoto?: Maybe<LikePhotoResponse>;
-  login: LoginResponse;
+  login?: Maybe<LoginResponse>;
+  readMessage?: Maybe<ReadMessageResponse>;
+  sendMessage?: Maybe<SendMessageResponse>;
   toggleLike?: Maybe<ToggleLikeResponse>;
   unfollowUser?: Maybe<UnfollowUserResponse>;
   uploadPhoto?: Maybe<UploadPhotoResponse>;
@@ -169,6 +190,11 @@ export type MutationCreateCommentArgs = {
 
 export type MutationDeleteCommentArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteMessageArgs = {
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -222,6 +248,18 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationReadMessageArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationSendMessageArgs = {
+  payload: Scalars['String']['input'];
+  roomId?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type MutationToggleLikeArgs = {
   id: Scalars['Int']['input'];
 };
@@ -256,13 +294,15 @@ export type Query = {
   searchPhotos?: Maybe<SearchPhotosResponse>;
   searchUsers?: Maybe<SearchUsersResponse>;
   seeFeed?: Maybe<SeeFeedResponse>;
-  seeFollowers?: Maybe<SeeFollwersResponse>;
+  seeFollowers: SeeFollwersResponse;
   seeFollowing?: Maybe<SeeFollowingResponse>;
   seeHashtag?: Maybe<Hashtag>;
   seePhoto?: Maybe<Photo>;
   seePhotoComments?: Maybe<Array<Maybe<Comment>>>;
   seePhotoLikes?: Maybe<Array<Maybe<User>>>;
   seeProfile?: Maybe<User>;
+  seeRoom?: Maybe<SeeRoomResponse>;
+  seeRooms?: Maybe<SeeRoomsResponse>;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
 };
@@ -317,8 +357,23 @@ export type QuerySeeProfileArgs = {
 };
 
 
+export type QuerySeeRoomArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type Room = {
+  __typename?: 'Room';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  messages?: Maybe<Array<Maybe<Message>>>;
+  unreadNumber: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type SearchPhotosResponse = {
@@ -334,7 +389,7 @@ export type SearchUsersResponse = {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
-  user: Array<Maybe<User>>;
+  user?: Maybe<Array<Maybe<User>>>;
 };
 
 export type SeeFeedResponse = {
@@ -378,11 +433,44 @@ export type SeePhotoResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+export type SeeRoomResponse = {
+  __typename?: 'SeeRoomResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  room?: Maybe<Room>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type SeeRoomsResponse = {
+  __typename?: 'SeeRoomsResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  room?: Maybe<Array<Maybe<Room>>>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type SendMessageResponse = {
+  __typename?: 'SendMessageResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type SharedMutationResponse = {
   __typename?: 'SharedMutationResponse';
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  roomSubscription?: Maybe<Message>;
+};
+
+
+export type SubscriptionRoomSubscriptionArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type ToggleLikeResponse = {
@@ -426,6 +514,13 @@ export type User = {
   totalFollowing: Scalars['Int']['output'];
   updatedAt: Scalars['DateTime']['output'];
   userName: Scalars['String']['output'];
+};
+
+export type ReadMessageResponse = {
+  __typename?: 'readMessageResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 
@@ -505,6 +600,7 @@ export type ResolversTypes = {
   CreateCommentResponse: ResolverTypeWrapper<CreateCommentResponse>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   DeleteCommentResponse: ResolverTypeWrapper<DeleteCommentResponse>;
+  DeleteMessageResponse: ResolverTypeWrapper<DeleteMessageResponse>;
   DeletePhotoResponse: ResolverTypeWrapper<DeletePhotoResponse>;
   EditCommentResponse: ResolverTypeWrapper<EditCommentResponse>;
   EditPhotoResponse: ResolverTypeWrapper<Omit<EditPhotoResponse, 'photo'> & { photo: ResolversTypes['Photo'] }>;
@@ -514,24 +610,31 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Like: ResolverTypeWrapper<Omit<Like, 'photo'> & { photo: ResolversTypes['Photo'] }>;
   LikePhotoResponse: ResolverTypeWrapper<LikePhotoResponse>;
-  LoginResponse: ResolverTypeWrapper<Omit<LoginResponse, 'user'> & { user?: Maybe<ResolversTypes['User']> }>;
+  LoginResponse: ResolverTypeWrapper<LoginResponse>;
+  Message: ResolverTypeWrapper<Omit<Message, 'room' | 'user'> & { room: ResolversTypes['Room'], user: ResolversTypes['User'] }>;
   Mutation: ResolverTypeWrapper<{}>;
   Photo: ResolverTypeWrapper<PhotoModel>;
   Query: ResolverTypeWrapper<{}>;
+  Room: ResolverTypeWrapper<Omit<Room, 'messages' | 'users'> & { messages?: Maybe<Array<Maybe<ResolversTypes['Message']>>>, users?: Maybe<Array<Maybe<ResolversTypes['User']>>> }>;
   SearchPhotosResponse: ResolverTypeWrapper<Omit<SearchPhotosResponse, 'photo'> & { photo?: Maybe<Array<Maybe<ResolversTypes['Photo']>>> }>;
-  SearchUsersResponse: ResolverTypeWrapper<Omit<SearchUsersResponse, 'user'> & { user: Array<Maybe<ResolversTypes['User']>> }>;
+  SearchUsersResponse: ResolverTypeWrapper<Omit<SearchUsersResponse, 'user'> & { user?: Maybe<Array<Maybe<ResolversTypes['User']>>> }>;
   SeeFeedResponse: ResolverTypeWrapper<Omit<SeeFeedResponse, 'photo'> & { photo?: Maybe<Array<Maybe<ResolversTypes['Photo']>>> }>;
   SeeFollowingResponse: ResolverTypeWrapper<Omit<SeeFollowingResponse, 'following'> & { following?: Maybe<Array<Maybe<ResolversTypes['User']>>> }>;
   SeeFollwersResponse: ResolverTypeWrapper<Omit<SeeFollwersResponse, 'followers'> & { followers?: Maybe<Array<Maybe<ResolversTypes['User']>>> }>;
   SeePhotoCommentsResponse: ResolverTypeWrapper<Omit<SeePhotoCommentsResponse, 'comment'> & { comment?: Maybe<Array<Maybe<ResolversTypes['Comment']>>> }>;
   SeePhotoResponse: ResolverTypeWrapper<Omit<SeePhotoResponse, 'photo'> & { photo?: Maybe<ResolversTypes['Photo']> }>;
+  SeeRoomResponse: ResolverTypeWrapper<Omit<SeeRoomResponse, 'room'> & { room?: Maybe<ResolversTypes['Room']> }>;
+  SeeRoomsResponse: ResolverTypeWrapper<Omit<SeeRoomsResponse, 'room'> & { room?: Maybe<Array<Maybe<ResolversTypes['Room']>>> }>;
+  SendMessageResponse: ResolverTypeWrapper<SendMessageResponse>;
   SharedMutationResponse: ResolverTypeWrapper<SharedMutationResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Subscription: ResolverTypeWrapper<{}>;
   ToggleLikeResponse: ResolverTypeWrapper<ToggleLikeResponse>;
   UnfollowUserResponse: ResolverTypeWrapper<UnfollowUserResponse>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   UploadPhotoResponse: ResolverTypeWrapper<Omit<UploadPhotoResponse, 'photo'> & { photo?: Maybe<ResolversTypes['Photo']> }>;
   User: ResolverTypeWrapper<Omit<User, 'followers' | 'following' | 'photos'> & { followers?: Maybe<Array<Maybe<ResolversTypes['User']>>>, following?: Maybe<Array<Maybe<ResolversTypes['User']>>>, photos?: Maybe<Array<Maybe<ResolversTypes['Photo']>>> }>;
+  readMessageResponse: ResolverTypeWrapper<ReadMessageResponse>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -542,6 +645,7 @@ export type ResolversParentTypes = {
   CreateCommentResponse: CreateCommentResponse;
   DateTime: Scalars['DateTime']['output'];
   DeleteCommentResponse: DeleteCommentResponse;
+  DeleteMessageResponse: DeleteMessageResponse;
   DeletePhotoResponse: DeletePhotoResponse;
   EditCommentResponse: EditCommentResponse;
   EditPhotoResponse: Omit<EditPhotoResponse, 'photo'> & { photo: ResolversParentTypes['Photo'] };
@@ -551,24 +655,31 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   Like: Omit<Like, 'photo'> & { photo: ResolversParentTypes['Photo'] };
   LikePhotoResponse: LikePhotoResponse;
-  LoginResponse: Omit<LoginResponse, 'user'> & { user?: Maybe<ResolversParentTypes['User']> };
+  LoginResponse: LoginResponse;
+  Message: Omit<Message, 'room' | 'user'> & { room: ResolversParentTypes['Room'], user: ResolversParentTypes['User'] };
   Mutation: {};
   Photo: PhotoModel;
   Query: {};
+  Room: Omit<Room, 'messages' | 'users'> & { messages?: Maybe<Array<Maybe<ResolversParentTypes['Message']>>>, users?: Maybe<Array<Maybe<ResolversParentTypes['User']>>> };
   SearchPhotosResponse: Omit<SearchPhotosResponse, 'photo'> & { photo?: Maybe<Array<Maybe<ResolversParentTypes['Photo']>>> };
-  SearchUsersResponse: Omit<SearchUsersResponse, 'user'> & { user: Array<Maybe<ResolversParentTypes['User']>> };
+  SearchUsersResponse: Omit<SearchUsersResponse, 'user'> & { user?: Maybe<Array<Maybe<ResolversParentTypes['User']>>> };
   SeeFeedResponse: Omit<SeeFeedResponse, 'photo'> & { photo?: Maybe<Array<Maybe<ResolversParentTypes['Photo']>>> };
   SeeFollowingResponse: Omit<SeeFollowingResponse, 'following'> & { following?: Maybe<Array<Maybe<ResolversParentTypes['User']>>> };
   SeeFollwersResponse: Omit<SeeFollwersResponse, 'followers'> & { followers?: Maybe<Array<Maybe<ResolversParentTypes['User']>>> };
   SeePhotoCommentsResponse: Omit<SeePhotoCommentsResponse, 'comment'> & { comment?: Maybe<Array<Maybe<ResolversParentTypes['Comment']>>> };
   SeePhotoResponse: Omit<SeePhotoResponse, 'photo'> & { photo?: Maybe<ResolversParentTypes['Photo']> };
+  SeeRoomResponse: Omit<SeeRoomResponse, 'room'> & { room?: Maybe<ResolversParentTypes['Room']> };
+  SeeRoomsResponse: Omit<SeeRoomsResponse, 'room'> & { room?: Maybe<Array<Maybe<ResolversParentTypes['Room']>>> };
+  SendMessageResponse: SendMessageResponse;
   SharedMutationResponse: SharedMutationResponse;
   String: Scalars['String']['output'];
+  Subscription: {};
   ToggleLikeResponse: ToggleLikeResponse;
   UnfollowUserResponse: UnfollowUserResponse;
   Upload: Scalars['Upload']['output'];
   UploadPhotoResponse: Omit<UploadPhotoResponse, 'photo'> & { photo?: Maybe<ResolversParentTypes['Photo']> };
   User: Omit<User, 'followers' | 'following' | 'photos'> & { followers?: Maybe<Array<Maybe<ResolversParentTypes['User']>>>, following?: Maybe<Array<Maybe<ResolversParentTypes['User']>>>, photos?: Maybe<Array<Maybe<ResolversParentTypes['Photo']>>> };
+  readMessageResponse: ReadMessageResponse;
 };
 
 export type CommentResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
@@ -603,6 +714,13 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type DeleteCommentResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['DeleteCommentResponse'] = ResolversParentTypes['DeleteCommentResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteMessageResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['DeleteMessageResponse'] = ResolversParentTypes['DeleteMessageResponse']> = {
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -678,7 +796,18 @@ export type LoginResponseResolvers<ContextType = DataSourceContext, ParentType e
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MessageResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isMine?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  payload?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  room?: Resolver<ResolversTypes['Room'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -686,6 +815,7 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   createAccount?: Resolver<ResolversTypes['CreateAccountResponse'], ParentType, ContextType, RequireFields<MutationCreateAccountArgs, 'email' | 'firstname' | 'password' | 'username'>>;
   createComment?: Resolver<Maybe<ResolversTypes['SeeFeedResponse']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'payload' | 'photoId'>>;
   deleteComment?: Resolver<Maybe<ResolversTypes['DeleteCommentResponse']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
+  deleteMessage?: Resolver<Maybe<ResolversTypes['DeleteMessageResponse']>, ParentType, ContextType, Partial<MutationDeleteMessageArgs>>;
   deletePhoto?: Resolver<Maybe<ResolversTypes['DeletePhotoResponse']>, ParentType, ContextType, RequireFields<MutationDeletePhotoArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   editComment?: Resolver<Maybe<ResolversTypes['EditCommentResponse']>, ParentType, ContextType, RequireFields<MutationEditCommentArgs, 'id'>>;
@@ -693,7 +823,9 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   editProfileUser?: Resolver<Maybe<ResolversTypes['EditProfileResponse']>, ParentType, ContextType, Partial<MutationEditProfileUserArgs>>;
   followUser?: Resolver<Maybe<ResolversTypes['FollowUserResponse']>, ParentType, ContextType, RequireFields<MutationFollowUserArgs, 'username'>>;
   likePhoto?: Resolver<Maybe<ResolversTypes['LikePhotoResponse']>, ParentType, ContextType, RequireFields<MutationLikePhotoArgs, 'id'>>;
-  login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  login?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  readMessage?: Resolver<Maybe<ResolversTypes['readMessageResponse']>, ParentType, ContextType, RequireFields<MutationReadMessageArgs, 'id'>>;
+  sendMessage?: Resolver<Maybe<ResolversTypes['SendMessageResponse']>, ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'payload'>>;
   toggleLike?: Resolver<Maybe<ResolversTypes['ToggleLikeResponse']>, ParentType, ContextType, RequireFields<MutationToggleLikeArgs, 'id'>>;
   unfollowUser?: Resolver<Maybe<ResolversTypes['UnfollowUserResponse']>, ParentType, ContextType, RequireFields<MutationUnfollowUserArgs, 'username'>>;
   uploadPhoto?: Resolver<Maybe<ResolversTypes['UploadPhotoResponse']>, ParentType, ContextType, Partial<MutationUploadPhotoArgs>>;
@@ -717,15 +849,27 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   searchPhotos?: Resolver<Maybe<ResolversTypes['SearchPhotosResponse']>, ParentType, ContextType, RequireFields<QuerySearchPhotosArgs, 'keyword'>>;
   searchUsers?: Resolver<Maybe<ResolversTypes['SearchUsersResponse']>, ParentType, ContextType, RequireFields<QuerySearchUsersArgs, 'keyword'>>;
   seeFeed?: Resolver<Maybe<ResolversTypes['SeeFeedResponse']>, ParentType, ContextType>;
-  seeFollowers?: Resolver<Maybe<ResolversTypes['SeeFollwersResponse']>, ParentType, ContextType, RequireFields<QuerySeeFollowersArgs, 'page' | 'username'>>;
+  seeFollowers?: Resolver<ResolversTypes['SeeFollwersResponse'], ParentType, ContextType, RequireFields<QuerySeeFollowersArgs, 'page' | 'username'>>;
   seeFollowing?: Resolver<Maybe<ResolversTypes['SeeFollowingResponse']>, ParentType, ContextType, RequireFields<QuerySeeFollowingArgs, 'username'>>;
   seeHashtag?: Resolver<Maybe<ResolversTypes['Hashtag']>, ParentType, ContextType, RequireFields<QuerySeeHashtagArgs, 'hashtag'>>;
   seePhoto?: Resolver<Maybe<ResolversTypes['Photo']>, ParentType, ContextType, RequireFields<QuerySeePhotoArgs, 'id'>>;
   seePhotoComments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType, RequireFields<QuerySeePhotoCommentsArgs, 'id' | 'page'>>;
   seePhotoLikes?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QuerySeePhotoLikesArgs, 'id'>>;
   seeProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerySeeProfileArgs, 'username'>>;
+  seeRoom?: Resolver<Maybe<ResolversTypes['SeeRoomResponse']>, ParentType, ContextType, RequireFields<QuerySeeRoomArgs, 'id'>>;
+  seeRooms?: Resolver<Maybe<ResolversTypes['SeeRoomsResponse']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+};
+
+export type RoomResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Room'] = ResolversParentTypes['Room']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>;
+  unreadNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SearchPhotosResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SearchPhotosResponse'] = ResolversParentTypes['SearchPhotosResponse']> = {
@@ -740,7 +884,7 @@ export type SearchUsersResponseResolvers<ContextType = DataSourceContext, Parent
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  user?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
+  user?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -785,11 +929,38 @@ export type SeePhotoResponseResolvers<ContextType = DataSourceContext, ParentTyp
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SeeRoomResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SeeRoomResponse'] = ResolversParentTypes['SeeRoomResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  room?: Resolver<Maybe<ResolversTypes['Room']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SeeRoomsResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SeeRoomsResponse'] = ResolversParentTypes['SeeRoomsResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  room?: Resolver<Maybe<Array<Maybe<ResolversTypes['Room']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SendMessageResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SendMessageResponse'] = ResolversParentTypes['SendMessageResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type SharedMutationResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SharedMutationResponse'] = ResolversParentTypes['SharedMutationResponse']> = {
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  roomSubscription?: SubscriptionResolver<Maybe<ResolversTypes['Message']>, "roomSubscription", ParentType, ContextType, RequireFields<SubscriptionRoomSubscriptionArgs, 'id'>>;
 };
 
 export type ToggleLikeResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['ToggleLikeResponse'] = ResolversParentTypes['ToggleLikeResponse']> = {
@@ -839,12 +1010,20 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ReadMessageResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['readMessageResponse'] = ResolversParentTypes['readMessageResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = DataSourceContext> = {
   Comment?: CommentResolvers<ContextType>;
   CreateAccountResponse?: CreateAccountResponseResolvers<ContextType>;
   CreateCommentResponse?: CreateCommentResponseResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   DeleteCommentResponse?: DeleteCommentResponseResolvers<ContextType>;
+  DeleteMessageResponse?: DeleteMessageResponseResolvers<ContextType>;
   DeletePhotoResponse?: DeletePhotoResponseResolvers<ContextType>;
   EditCommentResponse?: EditCommentResponseResolvers<ContextType>;
   EditPhotoResponse?: EditPhotoResponseResolvers<ContextType>;
@@ -854,9 +1033,11 @@ export type Resolvers<ContextType = DataSourceContext> = {
   Like?: LikeResolvers<ContextType>;
   LikePhotoResponse?: LikePhotoResponseResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
+  Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Photo?: PhotoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Room?: RoomResolvers<ContextType>;
   SearchPhotosResponse?: SearchPhotosResponseResolvers<ContextType>;
   SearchUsersResponse?: SearchUsersResponseResolvers<ContextType>;
   SeeFeedResponse?: SeeFeedResponseResolvers<ContextType>;
@@ -864,11 +1045,16 @@ export type Resolvers<ContextType = DataSourceContext> = {
   SeeFollwersResponse?: SeeFollwersResponseResolvers<ContextType>;
   SeePhotoCommentsResponse?: SeePhotoCommentsResponseResolvers<ContextType>;
   SeePhotoResponse?: SeePhotoResponseResolvers<ContextType>;
+  SeeRoomResponse?: SeeRoomResponseResolvers<ContextType>;
+  SeeRoomsResponse?: SeeRoomsResponseResolvers<ContextType>;
+  SendMessageResponse?: SendMessageResponseResolvers<ContextType>;
   SharedMutationResponse?: SharedMutationResponseResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   ToggleLikeResponse?: ToggleLikeResponseResolvers<ContextType>;
   UnfollowUserResponse?: UnfollowUserResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   UploadPhotoResponse?: UploadPhotoResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  readMessageResponse?: ReadMessageResponseResolvers<ContextType>;
 };
 
